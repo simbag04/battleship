@@ -16,20 +16,7 @@ const Gameboard = (() => {
     const placeShip = (ship, startX, startY, vertical) => {
         let shipLength = ship.length;
 
-        // check if ship can be placed
-        if (vertical) {
-            for (let i = startX; i < startX + shipLength; i++) {
-                if (i >= hitsInfo.length || hitsInfo[i][startY] != 0) {
-                    return false;
-                }
-            }
-        } else {
-            for (let i = startY; i < startY + shipLength; i++) {
-                if (i >= hitsInfo.length || hitsInfo[startX][i] != 0) {
-                    return false;
-                }
-            }
-        }
+        if (!checkShipPlacement(ship, startX, startY, vertical)) return false;
 
         // ship can be placed, so place it
         ships.push(ship);
@@ -48,6 +35,26 @@ const Gameboard = (() => {
 
     }
 
+    const checkShipPlacement = (ship, startX, startY, vertical) => {
+        let shipLength = ship.length;
+
+        // check if ship can be placed
+        if (vertical) {
+            for (let i = startX; i < startX + shipLength; i++) {
+                if (i >= hitsInfo.length || hitsInfo[i][startY] != 0) {
+                    return false;
+                }
+            }
+        } else {
+            for (let i = startY; i < startY + shipLength; i++) {
+                if (i >= hitsInfo.length || hitsInfo[startX][i] != 0) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     /* 
     This function receives an attack.
@@ -58,7 +65,7 @@ const Gameboard = (() => {
     */
 
     const receiveAttack = (x, y) => {
-        if (!alreadyAttacked(x, y)) return false;
+        if (alreadyAttacked(x, y)) return false;
         let ship = hitsInfo[x][y] % 10;
         hitsInfo[x][y] += 10;
         if (ship != 0) {
@@ -79,7 +86,11 @@ const Gameboard = (() => {
     }
 
     const alreadyAttacked = (x, y) => {
-        return (Math.floor(hitsInfo[x][y] / 10)) == 0;
+        return (Math.floor(hitsInfo[x][y] / 10)) != 0;
+    }
+
+    const hasShip = (x, y) => {
+        return hitsInfo[x][y] % 10 != 0;
     }
 
     const setOnesDigit = (num, digit) => {
@@ -94,8 +105,11 @@ const Gameboard = (() => {
 
     return {
         placeShip,
+        checkShipPlacement,
         receiveAttack,
-        allShipsSunk
+        allShipsSunk,
+        hasShip,
+        alreadyAttacked
     }
 
 

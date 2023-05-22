@@ -41,6 +41,13 @@ describe('Gameboard module', () => {
 
         // already hit this spot
         expect(board.receiveAttack(0, 5)).toBe(false);
+
+        // test that ship is there
+        expect(board.hasShip(0, 0)).toBe(true);
+        expect(board.hasShip(0, 1)).toBe(true);
+        expect(board.hasShip(0, 2)).toBe(true);
+        expect(board.hasShip(0, 3)).toBe(true);
+        expect(board.hasShip(0, 4)).toBe(true);
     })
 
     test('all ships sunk', () => {
@@ -104,11 +111,69 @@ describe('Game controller module', () => {
         // play some turns
         expect(gameController.playTurn()).toBe(true);
         expect(gameController.playTurn(0, 0)).toBe(true);
-        expect(gameController.playTurn()).toBe(true);
+        expect(gameController.getCurrentPlayer()).toBe("p2");
         expect(gameController.playTurn(0, 0)).toBe(false);
 
         // verify player didn't change since last turn failed
         expect(gameController.getCurrentPlayer()).toBe("p2");
 
+    })
+
+    test('Winner', () => {
+        gameController.initialize(false, false);
+
+        gameController.placeShip(0, 0, true);
+        gameController.placeShip(0, 1, true)
+        gameController.placeShip(0, 2, true)
+        gameController.placeShip(0, 3, true)
+        gameController.placeShip(0, 4, true)
+
+        gameController.placeShip(0, 0, true)
+        gameController.placeShip(0, 1, true)
+        gameController.placeShip(0, 2, true)
+        gameController.placeShip(0, 3, true)
+        gameController.placeShip(0, 4, true)  
+        
+        expect(gameController.readyForTurns()).toBe(true);
+
+        gameController.playTurn(0, 0);
+        gameController.playTurn(0, 0);
+        gameController.playTurn(1, 0);
+        gameController.playTurn(1, 0);
+        gameController.playTurn(2, 0);
+        gameController.playTurn(2, 0);
+        gameController.playTurn(3, 0);
+        gameController.playTurn(3, 0);
+        gameController.playTurn(4, 0);
+        gameController.playTurn(4, 0);
+
+        gameController.playTurn(0, 1);
+        gameController.playTurn(0, 1);
+        gameController.playTurn(1, 1);
+        gameController.playTurn(1, 1);
+        gameController.playTurn(2, 1);
+        gameController.playTurn(2, 1);
+        gameController.playTurn(3, 1);
+        gameController.playTurn(3, 1);
+
+        gameController.playTurn(0, 2);
+        gameController.playTurn(0, 2);
+        gameController.playTurn(1, 2);
+        gameController.playTurn(1, 2);
+        gameController.playTurn(2, 2);
+        gameController.playTurn(2, 2);
+
+        gameController.playTurn(0, 3);
+        gameController.playTurn(0, 3);
+        gameController.playTurn(1, 3);
+        gameController.playTurn(1, 3);
+        gameController.playTurn(2, 3);
+        gameController.playTurn(2, 3);
+
+        gameController.playTurn(0, 4);
+        gameController.playTurn(0, 4);
+        gameController.playTurn(1, 4);
+
+        expect(gameController.getWinner()).toBe("p1");
     })
 })

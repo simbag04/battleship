@@ -45,13 +45,21 @@ const gameController = (() => {
             } while (!otherPlayer.receiveAttack(rand_x, rand_y));
 
             swapPlayers();
+            playTurnsAutomatically();
             return true;
         }
         else if (otherPlayer.receiveAttack(x, y)) {
             swapPlayers();
+            playTurnsAutomatically();
             return true;
         }
         return false;
+    }
+
+    const playTurnsAutomatically = () => {
+        while (currentPlayer.isComputer() && getWinner() == null) {
+            playTurn();
+        }
     }
 
     const readyForTurns = () => {
@@ -63,6 +71,7 @@ const gameController = (() => {
         currentPlayer = otherPlayer;
         otherPlayer = temp;
     }
+
     const getRandomInt = (max) => {
         return Math.floor(Math.random() * max);
     }
@@ -70,12 +79,38 @@ const gameController = (() => {
     const getCurrentPlayer = () => {
         return currentPlayer == player1 ? "p1" : "p2";
     }
+
+    const getPlaceShipTurn = () => {
+        return placeShipTurn == player1 ? "p1" : "p2";
+    }
+
+    const getWinner = () => {
+        if (player1.allShipsSunk()) {
+            return "p2";
+        } else if (player2.allShipsSunk()) {
+            return "p1";
+        } else return null;
+    }
+
+    const getPlayer1Board = () => {
+        return player1.getBoard();
+    }
+
+    const getPlayer2Board = () => {
+        return player2.getBoard();
+    }
+
     return {
         initialize,
         placeShip,
         playTurn,
+        playTurnsAutomatically,
         readyForTurns,
-        getCurrentPlayer
+        getCurrentPlayer,
+        getWinner,
+        getPlayer1Board,
+        getPlayer2Board,
+        getPlaceShipTurn
     }
 })();
 

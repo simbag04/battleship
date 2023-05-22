@@ -40,12 +40,22 @@ const Player = ((computer) => {
         return Math.floor(Math.random() * max);
     }
 
+    const allShipsSunk = () => {
+        return playerBoard.allShipsSunk();
+    }
+
+    const getBoard = () => {
+        return playerBoard;
+    }
+
     return {
         placeShip,
         receiveAttack,
         allShipsPlaced,
         isComputer,
-        randomShipPlacements
+        randomShipPlacements,
+        allShipsSunk,
+        getBoard
     }
 });
 
